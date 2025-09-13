@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PreEx - Patient Information Sheet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .page-indicator {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .page-indicator span {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 8px 15px;
+            background-color: #e9ecef;
+            border-radius: 20px;
+            color: #666;
+        }
+
+        .page-indicator span.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .section h2 {
+            margin-top: 0;
+            color: #007bff;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        textarea {
+            height: 80px;
+            resize: vertical;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .checkbox-item input {
+            width: auto;
+        }
+
+        .navigation {
+            text-align: center;
+            margin-top: 30px;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+
+        .photo-upload {
+            text-align: center;
+            padding: 20px;
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .signature-area {
+            border: 1px solid #ccc;
+            padding: 20px;
+            text-align: center;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        .flip-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #17a2b8;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .document-back {
+            display: none;
+            text-align: center;
+            padding: 50px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                flex-direction: column;
+            }
+
+            .checkbox-group {
+                flex-direction: column;
+            }
+
+            body {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="flip-btn" onclick="flipDocument()">Flip Document</button>
+
+    <div class="container">
+        <div id="document-front">
+            <header>
+                <h1>PreEx - Patient Information Sheet</h1>
+                <p style="text-align: center; color: #666;">First Semester Academic Year 2025-2026</p>
+            </header>
+
+            <div class="page-indicator">
+                <span class="active">Page 1</span>
+                <span>Page 2</span>
+                <span>Page 3</span>
+                <span>Page 4</span>
+            </div>
+
+            <!-- Page 1: Personal Information -->
+            <div class="page active" id="page1">
+                <div class="section">
+                    <h2>Patient Information</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="lastName">Last Name:</label>
+                            <input type="text" id="lastName" name="lastName">
+                        </div>
+                        <div class="form-group">
+                            <label for="firstName">First Name:</label>
+                            <input type="text" id="firstName" name="firstName">
+                        </div>
+                        <div class="form-group">
+                            <label for="middleName">Middle Name:</label>
+                            <input type="text" id="middleName" name="middleName">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gender">Gender:</label>
+                            <select id="gender" name="gender">
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dob">Date of Birth (MM/DD/YYYY):</label>
+                            <input type="date" id="dob" name="dob">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Address:</label>
+                        <textarea id="address" name="address"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city">City:</label>
+                            <input type="text" id="city" name="city">
+                        </div>
+                        <div class="form-group">
+                            <label for="zip">ZIP:</label>
+                            <input type="text" id="zip" name="zip">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone:</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="contactMethod">Preferred Contact Method:</label>
+                            <select id="contactMethod" name="contactMethod">
+                                <option value="phone">Phone</option>
+                                <option value="email">Email</option>
+                                <option value="text">Text</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="photo-upload">
+                    <input type="file" id="photoUpload" accept="image/*" style="display: none;">
+                    <button type="button" onclick="document.getElementById('photoUpload').click()">
+                        Add Patient Photo
+                    </button>
+                    <div id="photoPreview"></div>
+                </div>
+            </div>
+
+            <!-- Page 2: Emergency Contact & Insurance -->
+            <div class="page" id="page2">
+                <div class="section">
+                    <h2>Emergency Contact Information</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="emergencyName">Emergency Contact Name:</label>
+                            <input type="text" id="emergencyName" name="emergencyName">
+                        </div>
+                        <div class="form-group">
+                            <label for="emergencyPhone">Phone:</label>
+                            <input type="tel" id="emergencyPhone" name="emergencyPhone">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="relationship">Relationship to Patient:</label>
+                        <select id="relationship" name="relationship">
+                            <option value="">Select Relationship</option>
+                            <option value="spouse">Spouse</option>
+                            <option value="parent">Parent</option>
+                            <option value="child">Child</option>
+                            <option value="sibling">Sibling</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Insurance Information (if applicable)</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="provider">Provider:</label>
+                            <input type="text" id="provider" name="provider">
+                        </div>
+                        <div class="form-group">
+                            <label for="policyNumber">Policy Number:</label>
+                            <input type="text" id="policyNumber" name="policyNumber">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="groupNumber">Group Number:</label>
+                            <input type="text" id="groupNumber" name="groupNumber">
+                        </div>
+                        <div class="form-group">
+                            <label for="subscriberName">Subscriber Name:</label>
+                            <input type="text" id="subscriberName" name="subscriberName">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Reason for Visit</h2>
+                    <div class="form-group">
+                        <label for="primaryReason">Primary Reason for Visit:</label>
+                        <textarea id="primaryReason" name="primaryReason"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Have you been treated for this before?</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="radio" id="treatedYes" name="treatedBefore" value="yes">
+                                <label for="treatedYes">Yes</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="treatedNo" name="treatedBefore" value="no">
+                                <label for="treatedNo">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 3: Medical History -->
+            <div class="page" id="page3">
+                <div class="section">
+                    <h2>Medical History Summary</h2>
+                    <div class="form-group">
+                        <label>Do you have any of the following conditions? (Check all that apply):</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="diabetes" name="conditions" value="diabetes">
+                                <label for="diabetes">Diabetes</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="hypertension" name="conditions" value="hypertension">
+                                <label for="hypertension">Hypertension</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="heartDisease" name="conditions" value="heartDisease">
+                                <label for="heartDisease">Heart Disease</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="asthma" name="conditions" value="asthma">
+                                <label for="asthma">Asthma</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="cancer" name="conditions" value="cancer">
+                                <label for="cancer">Cancer</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="stroke" name="conditions" value="stroke">
+                                <label for="stroke">Stroke</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="other" name="conditions" value="other">
+                                <label for="other">Other</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="medications">Are you currently taking any medications? If yes, list medications:</label>
+                        <textarea id="medications" name="medications"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="allergies">Are you allergic to any medications? If yes, list allergies:</label>
+                        <textarea id="allergies" name="allergies"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="surgeries">Have you had any surgeries or hospitalizations? If yes, list procedures and dates:</label>
+                        <textarea id="surgeries" name="surgeries"></textarea>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Lifestyle & Social History</h2>
+                    <div class="form-group">
+                        <label>Do you smoke or use tobacco products?</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="radio" id="smokeYes" name="smoking" value="yes">
+                                <label for="smokeYes">Yes</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="smokeNo" name="smoking" value="no">
+                                <label for="smokeNo">No</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="smokeFormer" name="smoking" value="former">
+                                <label for="smokeFormer">Former Smoker</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Do you use recreational drugs?</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="radio" id="drugsYes" name="drugs" value="yes">
+                                <label for="drugsYes">Yes</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="drugsNo" name="drugs" value="no">
+                                <label for="drugsNo">No</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="concerns">Do you have any concerns about access to healthcare, transportation, or financial barriers?</label>
+                        <textarea id="concerns" name="concerns"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 4: Pharmacy & Signature -->
+            <div class="page" id="page4">
+                <div class="section">
+                    <h2>Pharmacy Information</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pharmacyName">Preferred Pharmacy Name:</label>
+                            <input type="text" id="pharmacyName" name="pharmacyName">
+                        </div>
+                        <div class="form-group">
+                            <label for="pharmacyPhone">Phone Number:</label>
+                            <input type="tel" id="pharmacyPhone" name="pharmacyPhone">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="pharmacyAddress">Address:</label>
+                        <textarea id="pharmacyAddress" name="pharmacyAddress"></textarea>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Consent & Signature</h2>
+                    <p><strong>I confirm that the information provided is accurate to the best of my knowledge.</strong></p>
+
+                    <div class="signature-area">
+                        <p>Signature Area</p>
+                        <input type="text" placeholder="Type your full name here as signature" id="signature" name="signature" style="margin-top: 10px;">
+                    </div>
+
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label for="signatureDate">Date:</label>
+                        <input type="date" id="signatureDate" name="signatureDate">
+                    </div>
+                </div>
+            </div>
+
+            <div class="navigation">
+                <button type="button" class="btn btn-secondary" id="prevBtn" onclick="previousPage()">Previous</button>
+                <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextPage()">Next</button>
+                <button type="button" class="btn btn-success" id="submitBtn" onclick="submitForm()" style="display: none;">Submit Form</button>
+            </div>
+        </div>
+
+        <div id="document-back" class="document-back">
+            <h2>Document Back Side</h2>
+            <p>This is the back of the document.</p>
+            <p>Additional terms and conditions would be displayed here.</p>
+            <br>
+            <p><strong>Instructions:</strong></p>
+            <ul style="text-align: left; display: inline-block;">
+                <li>Please fill out all required fields</li>
+                <li>Use your real information (do not use fake data)</li>
+                <li>This is an individual project</li>
+                <li>Submit by the deadline: Sep 15, 2025</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        const totalPages = 4;
+        let isFlipped = false;
+
+        function showPage(pageNumber) {
+            // Hide all pages
+            for (let i = 1; i <= totalPages; i++) {
+                document.getElementById('page' + i).classList.remove('active');
+            }
+
+            // Show current page
+            document.getElementById('page' + pageNumber).classList.add('active');
+
+            // Update page indicators
+            const indicators = document.querySelectorAll('.page-indicator span');
+            indicators.forEach((indicator, index) => {
+                if (index + 1 === pageNumber) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+
+            // Update navigation buttons
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+
+            if (pageNumber === 1) {
+                prevBtn.style.display = 'none';
+            } else {
+                prevBtn.style.display = 'inline-block';
+            }
+
+            if (pageNumber === totalPages) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'inline-block';
+            } else {
+                nextBtn.style.display = 'inline-block';
+                submitBtn.style.display = 'none';
+            }
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                showPage(currentPage);
+            }
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                showPage(currentPage);
+            }
+        }
+
+        function flipDocument() {
+            const front = document.getElementById('document-front');
+            const back = document.getElementById('document-back');
+
+            if (isFlipped) {
+                front.style.display = 'block';
+                back.style.display = 'none';
+                isFlipped = false;
+            } else {
+                front.style.display = 'none';
+                back.style.display = 'block';
+                isFlipped = true;
+            }
+        }
+
+        function submitForm() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('signatureDate').value = today;
+
+            alert('Form submitted successfully!\n\nIn a real application, this would be sent to a server for processing.');
+        }
+
+        // Handle photo upload
+        document.getElementById('photoUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('photoPreview').innerHTML =
+                        '<img src="' + e.target.result + '" style="max-width: 200px; max-height: 150px; margin-top: 10px; border-radius: 5px;">';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Set today's date when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('signatureDate').value = today;
+            showPage(1);
+        });
+    </script>
+</body>
+</html>
